@@ -3,16 +3,24 @@
 This repository consists of parts of the tracing framework which will gradually enable generation of Common Trace Format trace output
 for RTEMS applications. The test suitcase is the fileio sample which comes along with the RTEMS installation. 
 
-#Pre-requisites:
+## Pre-requisites:
 
-- Install rtems 5 for sparc/erc32 architecture-bsp pair. The rtems file that I have made changes to is `main_rtrace.c` which lies in
-rtems/cpukit/libmisc/shell/ directory. It is a part of this repository too with the same name (main_rtrace.c). 
+- Install rtems 5 for sparc/erc32 architecture-bsp pair. The RTEMS repository with modifications for enabling CTF Tracing is https://github.com/VidushiVashishth/rtems
 
 - Download the fileio INI file in this repository and save it on the top of the installed BSP (erc32) directory
 
 - Change the values of `rtems-path` and `prefix` in the fileio INI file according to your installation.
 
-#Instructions on how to run tracing:
+The general Tracing process consists of the following steps:
+
+1) Generation of RTEMS trace.
+2) Transportation of the generated trace to the host machine.
+3) Conversion of transported traces to CTF using babeltrace scripts.
+4) Viewing the converted output (CTF).
+
+## 1) Instructions on how to generate traces:
+
+This step occurs on the RTEMS target (simulator).
 
 After installing rtems and the application INI (fileio) file, `cd` to the top of the installed BSP directory and run the following
 commands.
@@ -43,4 +51,18 @@ sparc-rtems5/c/erc32/testsuites/samples/fileio.exe sparc-rtems5/c/erc32/testsuit
 
 quickly hit `s`, `root` and `pwd` as soon as you enter the command. Use `rtrace -l` option to list the available options with rtrace.
 
-enter `rtrace stop`, `rtrace ctftrace <filename>` to save ctf traces inside `filename` provided by you. 
+The `rtrace save <filename>` command saves the trace buffer to a file. 
+
+## 2) Transportation of the generated Trace to the host:
+
+This step transfers the RTEMS generated trace output from the target (simulator) to the development host machine. 
+I am using socket programming to implement this step. The client would be running on the target (simulator) and server on the host machine.
+
+## 3) Conversion of Transported Trace into CTF using babletrace scripts:
+
+This step executes on the host machine. The transported RTEMS format trace is converted to CTF using babeltrace scripts.
+
+## 4) Viewing the final output:
+
+The final output can be viewed using various tools like Trace Compass.
+
