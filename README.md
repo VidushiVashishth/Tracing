@@ -18,9 +18,13 @@ The general Tracing process consists of the following steps:
 3) Conversion of transported traces to CTF using babeltrace scripts.
 4) Viewing the converted output (CTF).
 
-## 1) Instructions on how to generate traces:
+## 1) Generation of RTEMS traces:
 
 This step occurs on the RTEMS target (simulator).
+
+### Alternatives:
+
+There are two ways of generating RTEMS trace: Using printk generators or using trace buffering. The output of the printk generators is trace dumped on console. Whereas trace buffering can both be stored in the form of binary files or printed on console. The following are instructions to generate trace using trace buffering.
 
 After installing rtems and the application INI (fileio) file, `cd` to the top of the installed BSP directory and run the following
 commands.
@@ -53,16 +57,34 @@ quickly hit `s`, `root` and `pwd` as soon as you enter the command. Use `rtrace 
 
 The `rtrace save <filename>` command saves the trace buffer to a file. 
 
+### Tools used:
+
+RTEMS trace linker is used in this step to generate traces for applications. 
+
 ## 2) Transportation of the generated Trace to the host:
 
-This step transfers the RTEMS generated trace output from the target (simulator) to the development host machine. 
-I am using socket programming to implement this step. The client would be running on the target (simulator) and server on the host machine.
+### Alternatives:
+
+This step transfers the RTEMS generated trace output from the target (simulator) to the development host machine. This could be done using a number of alternatives:
+ 
+1) Using socket programming. The client would be running on the target (simulator) and server on the host machine.
+
+2) Creating a transportation API.
+
+3) (quick fix) : Parsing the console trace output on the host machine.
 
 ## 3) Conversion of Transported Trace into CTF using babletrace scripts:
 
-This step executes on the host machine. The transported RTEMS format trace is converted to CTF using babeltrace scripts.
+### Tools used:
+
+This step executes on the host machine. The transported RTEMS format trace is converted to CTF using babeltrace scripts. 
+
+### Lessons learnt:
+RTEMS trace format can be saved in the form of binary files or printed on console. To convert the RTEMS trace from its binary format to CTF we would need to create a customised babeltrace plugin.  
 
 ## 4) Viewing the final output:
+
+### Tools used:
 
 The final output can be viewed using various tools like Trace Compass.
 
