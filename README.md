@@ -24,38 +24,9 @@ This step occurs on the RTEMS target (simulator).
 
 ### Alternatives:
 
-There are two ways of generating RTEMS trace: Using printk generators or using trace buffering. The output of the printk generators is trace dumped on console. Whereas trace buffering can both be stored in the form of binary files or printed on console. The following are instructions to generate trace using trace buffering.
+There are two ways of generating RTEMS trace: Using printk generators or using trace buffering. The output of the printk generators is trace dumped on console. Whereas trace buffering can both be stored in the form of binary files or printed on console. The following are instructions to generate trace using trace buffering for the fileio sample testcase. This testcase is a part of the rtems installation. 
 
-After installing rtems and the application INI (fileio) file, `cd` to the top of the installed BSP directory and run the following
-commands.
-
-1) configure command:
-
-`$HOME/development/rtems/kernel/rtems/configure --prefix=$HOME/development/rtems/5 --target=sparc-rtems5 --enable-rtemsbsp=erc32 --enable-posix`
-
-2) application link commands:
-
-`sparc-rtems5-gcc -B/home/vidushi/development/rtems/5/sparc-rtems5/erc32/lib/ \
--specs bsp_specs -qrtems -mcpu=cypress -O2 -g -ffunction-sections -fdata-sections \
--Wall -Wmissing-prototypes -Wimplicit-function-declaration -Wstrict-prototypes \
--Wnested-externs -Wl,--gc-sections -mcpu=cypress -o sparc-rtems5/c/erc32/testsuites/samples/fileio.exe \
-sparc-rtems5/c/erc32/testsuites/samples/fileio/fileio-init.o`
-
-The -B option indicates the full path to the respective file. Make changes to the path values of the fileio.exe, fileio-init.o and 
-the lib directory according to your installation
-
-`rtems-tld -C fileio-trace.ini -W fileio-wrapper -- -B/home/vidushi/development/rtems/5/sparc-rtems5/erc32/lib/ \
--specs bsp_specs -qrtems -mcpu=cypress -O2 -g -ffunction-sections -fdata-sections -Wall -Wmissing-prototypes \
--Wimplicit-function-declaration -Wstrict-prototypes -Wnested-externs -Wl,--gc-sections -mcpu=cypress -o \
-sparc-rtems5/c/erc32/testsuites/samples/fileio.exe sparc-rtems5/c/erc32/testsuites/samples/fileio/fileio-init.o`
-
-3) run the application:
-
-`sparc-rtems5-run sparc-rtems5/c/erc32/testsuites/samples/fileio.exe`
-
-quickly hit `s`, `root` and `pwd` as soon as you enter the command. Use `rtrace -l` option to list the available options with rtrace.
-
-The `rtrace save <filename>` command saves the trace buffer to a file. 
+Copy the `Trace_Sample_fileio` directory on the top of the installed bsp directory. Change the values of the keys `prefix` and `rtems-path` of the filieo-trace.ini file according to your rtems installation. Also make alterations to the value of `LIBPATH` in the `Makefile` according to your installation. The B option in `LIBPATH` denotes the usage of full path to the lib folder. Run `make` and `make run` commands to execute trace enabled fileio executable. Use `rtrace -l` to see the available options of commands provided with `rtrace`. Use `rtrace stop` followed by `rtrace trace` to see the trace output on the console. Note that this example runs a precompiled sample test case. Any change to the code of the test case will require regeneration of the object and executable files.  
 
 ### Tools used:
 
